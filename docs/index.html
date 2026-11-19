@@ -1,10 +1,56 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Laboratory Integration Simulator | Portfolio Demonstration</title>
-<link rel="stylesheet" href="./style.css" /></head>
-<body><main>
-<header><div class="eyebrow">ENGINEERING PORTFOLIO · SYNTHETIC HEALTHCARE DATA</div><h1>Laboratory Integration Simulator</h1><p>A transparent technical demonstration of a test request moving from a simulated EPR to a simulated LIMS and returning as an HL7 v2 result mapped to FHIR R4 resources.</p><div class="warning">Not affiliated with the NHS. Not connected to any clinical system. No real patient information. This is a client-side proof of concept, not production LIMS, EPR or certified healthcare interoperability software.</div></header>
-<section class="stats" aria-label="Workflow steps"><article id="a1"><span>01</span><strong>EPR → order</strong><small>FHIR ServiceRequest</small></article><article id="a2"><span>02</span><strong>LIMS → result</strong><small>Synthetic HL7 ORU^R01</small></article><article id="a3"><span>03</span><strong>Integration → EPR</strong><small>FHIR Observation + report</small></article></section>
-<section class="workspace"><div class="controls"><div><h2>Run the simulated workflow</h2><p>Use the steps to observe ordering, result generation, validation and record mapping.</p></div><div class="actions"><button id="step1">1. Create order</button><button id="step2" disabled>2. Generate HL7</button><button id="step3" disabled>3. Validate & map</button><button id="reset" class="secondary">Reset</button></div><p id="status" role="status">Ready to create a synthetic laboratory order.</p></div><div class="panels"><article><div class="panel-head"><span>EPR / laboratory data</span><span class="pill">SYNTHETIC</span></div><dl><dt>Patient</dt><dd>DEMO-001 · Jane Example</dd><dt>Request</dt><dd>ORDER-001 · Synthetic genetics panel</dd><dt>Specimen</dt><dd>SPEC-001</dd></dl><h3>FHIR ServiceRequest</h3><pre id="order">Not created yet.</pre></article><article><div class="panel-head"><span>Integration evidence</span><span class="pill">ILLUSTRATIVE</span></div><h3>HL7 v2-style message</h3><pre id="hl7">Not generated yet.</pre><h3>FHIR Observation + DiagnosticReport</h3><pre id="fhir">Not mapped yet.</pre></article></div></section>
-<section class="notes"><h2>What this demonstrates</h2><ul><li>FHIR R4-style test order and report resources</li><li>HL7 v2-style result segmentation and basic field mapping</li><li>Patient, order and specimen ID reconciliation before mapping</li><li>Basic duplicate-message rejection and exception handling</li></ul><h2>What it does not demonstrate</h2><p>Clinical safety case, production-grade HL7/FHIR validation, terminology-service integration, secured network transport, persistent SQL Server operations, real EPR/LIMS vendor integration or NHS accreditation. A sample SQL Server schema is included separately in the repository for further development.</p><p class="footer">Educational portfolio demonstration by Vincent Olagbemide. All entities and results are fictitious.</p></section>
-</main><script type="module" src="./app.mjs"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light"/>
+  <meta name="description" content="Genflow: an interactive, synthetic laboratory integration workbench demonstrating end-to-end healthcare interoperability."/>
+  <title>Genflow — Laboratory integration workbench</title>
+  <link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+  <div class="topline"><span>INDEPENDENT ENGINEERING PORTFOLIO</span><span>NOT CONNECTED TO NHS SYSTEMS <span aria-hidden="true">↗</span></span></div>
+  <header class="site-header">
+    <a class="brand" href="#workspace" aria-label="Genflow home"><span class="mark"><i></i><i></i><i></i></span><span>genflow<span class="brand-dot">.</span></span><span class="brand-divider"></span><span class="brand-caption">LAB SYSTEMS</span></a>
+    <nav class="top-links" aria-label="Primary navigation">
+      <a href="#workspace">Workbench</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="https://github.com/vincentayorinde/nhs-lab-integration-demo" target="_blank" rel="noopener">View source <span aria-hidden="true">↗</span></a>
+    </nav>
+    <div class="environment"><span class="env-dot"></span> EDUCATIONAL ENVIRONMENT</div>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div class="eyebrow"><span class="tiny-grid">✳</span> CLINICAL INTEROPERABILITY, MADE TANGIBLE <span class="eyebrow-line"></span> V2.0</div>
+      <div class="intro-grid">
+        <h1 id="page-title">From request<br/>to <em>result.</em><br/>Nothing lost.</h1>
+        <div class="intro-side"><p>A practical workbench that demonstrates how laboratory orders, specimens and results move safely between separate healthcare systems.</p><div class="hero-actions"><a class="solid-link" href="#workspace">Explore the workbench <span>↗</span></a><a class="subtle-link" href="#how-it-works">Understand the flow <span>↓</span></a></div><div class="mini-note"><span class="spark">✳</span><span>Real workflow logic and validation.<br/>Fictional patients, synthetic outcomes.</span></div></div>
+      </div>
+      <div class="hero-rule"><span>ORDER / INTAKE / ANALYSIS / VALIDATION / DELIVERY</span><span>01 — 06</span></div>
+    </section>
+    <section class="workspace" id="workspace" aria-label="Interactive workbench">
+      <aside class="workspace-side">
+        <div class="workspace-logo"><div class="workspace-badge">G</div><div><strong>Lab operations</strong><small>Interoperability workbench</small></div></div>
+        <div class="side-label">WORKSPACE</div>
+        <nav class="side-nav" id="side-nav" aria-label="Workbench views"><button data-view="cases" class="active"><span class="nav-symbol">▦</span> Case workbench <span class="nav-key">01</span></button><button data-view="messages"><span class="nav-symbol">⇄</span> Message explorer <span class="nav-key">02</span></button><button data-view="audit"><span class="nav-symbol">≡</span> Audit trail <span class="nav-key">03</span></button></nav>
+        <div class="side-bottom"><span class="side-label">ENVIRONMENT</span><div class="system-status"><span class="pulse"></span><span>Browser workflow engine</span><span class="system-icon">↗</span></div><p>All records stay in this browser. Data resets on request.</p><button class="reset-link" id="reset-data">↺ Reset demo workspace</button></div>
+      </aside>
+      <div class="workspace-main">
+        <div class="workspace-heading"><div><div class="section-kicker" id="view-kicker">WORKSPACE / OVERVIEW</div><h2 id="view-title">The full picture, in real time.</h2><p id="view-description">Every request is traceable from order through laboratory verification to final delivery.</p></div><button class="primary-button" id="new-order"><span>＋</span> New test request</button></div>
+        <div id="app-alert" class="notice" role="status" hidden></div>
+        <div id="summary-cards" class="summary-cards" aria-label="Current cases summary"></div>
+        <div id="view-content"></div>
+        <div class="workspace-foot"><span><span class="foot-dot"></span> DATA MODE: SYNTHETIC • STORED LOCALLY</span><span>NO LIVE NHS / EPR / LIMS CONNECTION</span></div>
+      </div>
+    </section>
+    <section class="how-section" id="how-it-works">
+      <div class="how-heading"><div class="section-kicker">UNDER THE HOOD / 001</div><h2>Complex systems.<br/><em>Clear handoffs.</em></h2><p>Every step represents an actual workflow operation inside this prototype, with controlled transitions, synthetic message transformation and auditable events.</p></div>
+      <div class="how-grid"><article><div class="how-number">01 <span>→</span></div><h3>Request</h3><p>A clinician-side FHIR ServiceRequest identifies the patient, proposed test and specimen.</p><div class="how-meta">FHIR R4-STYLE JSON</div></article><article><div class="how-number">02 <span>→</span></div><h3>Process</h3><p>Specimens are received, analysis is recorded and a result must be verified before release.</p><div class="how-meta">EXPLICIT STATE TRANSITIONS</div></article><article><div class="how-number">03 <span>→</span></div><h3>Deliver</h3><p>HL7-style result messages are reconciled and mapped into FHIR observations and reports.</p><div class="how-meta">IDENTITY + DUPLICATE GUARDS</div></article></div>
+      <div class="ethics-note"><div class="notes-icon">i</div><p><strong>About this project:</strong> Genflow is an independent software engineering portfolio exercise by Vincent Olagbemide, not a deployed hospital application. It implements browser-based state changes, identity checks, message formatting and audit entries, but its HL7 and FHIR messages are educational subsets, not clinically certified interoperability. No real patient data or NHS infrastructure is accessed.</p><a href="https://github.com/vincentayorinde/nhs-lab-integration-demo" target="_blank" rel="noopener">Read the technical README ↗</a></div>
+    </section>
+  </main>
+  <footer class="site-footer"><span class="brand small-brand"><span class="mark"><i></i><i></i><i></i></span>genflow<span class="brand-dot">.</span></span><span>MADE TO EXPLAIN THE ENGINEERING BEHIND CLINICAL INTEROPERABILITY.</span><span>© 2026 VINCENT OLAGBEMIDE</span></footer>
+  <div id="modal" class="modal-backdrop" hidden><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-head"><div class="section-kicker">NEW LABORATORY REQUEST</div><button class="modal-close" id="close-modal" aria-label="Close dialog">×</button></div><h2 id="modal-title">Create a test request.</h2><p>Choose fictional records. No patient information is transmitted outside your browser.</p><form id="order-form"><label>Fictional patient <select name="patientId" id="form-patient" required></select></label><label>Genetic test <select name="testCode" id="form-test" required></select></label><label>Priority <select name="priority"><option value="Routine">Routine</option><option value="Urgent">Urgent</option></select></label><div class="modal-actions"><button type="button" class="outline-button" id="cancel-modal">Cancel</button><button class="primary-button" type="submit">Create request <span>↗</span></button></div></form></div></div>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>
